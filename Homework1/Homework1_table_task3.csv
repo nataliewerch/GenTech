@@ -1,0 +1,10 @@
+FIO,age,salary,number_books,serviced_rooms_count,category
+"Anna Ivanova",48,0,4,0,reader
+"Andrey Blech",15,0,10,0,reader
+"Anton Antonov",32,30000,0,3,library_staff
+"Gleb Glebov",35,20000,0,2,library_staff
+"Anton Nikitin",26,25000,0,2,library_staff
+"Ivan Antonov",37,35000,0,4,library_staff
+"Pavel Pavlov",45,10000,0,0,service_staff
+"Anna Petrova",47,13000,0,0,service_staff
+"Inna Semenova",33,15000,0,0,service_staff
