@@ -1,0 +1,28 @@
+/*
+8. Найти среднюю зарплату в департаменте с id 90
+*/
+select avg(salary) average_salary
+from employees
+where department_id = 90;
+
+/*
+9. Найти самую большую зарплату среди сотрудников, работающих в департаментах с id 70 и 80
+*/
+select max(salary) max_salary
+from employees
+where department_id in(70, 80);
+
+/*
+10. Найти количество сотрудников из департамента с айди 100, которые зарабатывают более 5000
+*/
+select count(*) count_employees
+from employees
+where salary > 5000 and department_id = 100;
+
+/*
+11. Найти количество сотрудников из департамента с айди 60, которые зарабатывают больше средней зарплаты по компании
+*/
+
+select count(*) count_employees
+from employees
+where department_id = 60 and salary > (select avg(salary) from employees);
