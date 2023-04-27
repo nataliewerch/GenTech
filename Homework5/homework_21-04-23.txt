@@ -1,0 +1,105 @@
+create database homework;
+
+use homework;
+
+
+/*
+1. Вывести в данные о том, какой пользователь userid сколько потратил в общем
+*/
+
+Create table If Not Exists Sales (
+saleid int,
+productid int,
+userid int,
+quantity int
+);
+
+Create table If Not Exists Product (
+productid int,
+price int
+);
+
+insert into Sales (saleid, productid, userid, quantity) values ('1', '1', '101', '10');
+insert into Sales (saleid, productid, userid, quantity) values ('2', '2', '101', '1');
+insert into Sales (saleid, productid, userid, quantity) values ('3', '3', '102', '3');
+insert into Sales (saleid, productid, userid, quantity) values ('4', '3', '102', '2');
+insert into Sales (saleid, productid, userid, quantity) values ('5', '2', '103', '3');
+
+insert into Product (productid, price) values ('1', '10');
+insert into Product (productid, price) values ('2', '25');
+insert into Product (productid, price) values ('3', '15');
+
+select t1.userid, sum(t1.quantity * t2.price) as spending
+from sales t1
+inner join product t2
+on t1.productid = t2.productid
+group by t1.userid
+order by userid;
+
+
+/*
+2. Найти среднюю цену продаж для каждого product_id
+*/
+
+Create table If Not Exists Prices (
+productid int,
+startdate date,
+enddate date,
+price int
+);
+
+Create table If Not Exists UnitsSold (
+productid int,
+purchase_date date,
+units int
+);
+
+insert into Prices (productid, startdate, enddate, price) values ('1', '2019-02-17', '2019-02-28', '5');
+insert into Prices (productid, startdate, enddate, price) values ('1', '2019-03-01', '2019-03-22', '20');
+insert into Prices (productid, startdate, enddate, price) values ('2', '2019-02-01', '2019-02-20', '15');
+insert into Prices (productid, startdate, enddate, price) values ('2', '2019-02-21', '2019-03-31', '30');
+
+insert into UnitsSold (productid, purchase_date, units) values ('1', '2019-02-25', '100');
+insert into UnitsSold (productid, purchase_date, units) values ('1', '2019-03-01', '15');
+insert into UnitsSold (productid, purchase_date, units) values ('2', '2019-02-10', '200');
+insert into UnitsSold (productid, purchase_date, units) values ('2', '2019-03-22', '30');
+
+select t1.productid, round(sum(t1.price * t2.units)/sum(t2.units), 2) as averageprice
+from prices t1
+inner join unitssold t2
+on t1.productid = t2.productid and t2.purchase_date between t1.startdate and t1.enddate
+group by t1.productid;
+
+
+
+/*
+3. Дано автобусы и пассажиры, определить количество пассажиров уезжающих в каждом автобусе.
+*/
+
+Create table If Not Exists Buses (
+busid int,
+arrivaltime int
+);
+
+Create table If Not Exists Passengers (
+passengerid int,
+arrivaltime int
+);
+
+insert into Buses (busid, arrivaltime) values ('1', '2');
+insert into Buses (busid, arrivaltime) values ('2', '4');
+insert into Buses (busid, arrivaltime) values ('3', '7');
+
+insert into Passengers (passengerid, arrivaltime) values ('11', '1');
+insert into Passengers (passengerid, arrivaltime) values ('12', '5');
+insert into Passengers (passengerid, arrivaltime) values ('13', '6');
+insert into Passengers (passengerid, arrivaltime) values ('14', '7');
+
+select t1.busid, (select count(t2.passengerid)
+			from passengers t2
+			where t1.arrivaltime >= t2.arrivaltime and not exists (
+				select t3.passengerid
+                from passengers t3
+                left join buses t4 on t4.arrivaltime >= t3.arrivaltime
+                where t4.busid < t1.busid and t3.passengerid = t2.passengerid)) as passengerscnt
+from buses t1;
